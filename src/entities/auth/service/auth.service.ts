@@ -24,4 +24,20 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload)
     };
   }
+
+  async signIn(email: string, password: string): Promise<{access_token: string}> {
+    const user = await this.userService.findOne(email);
+    if (!user) {
+      throw new HttpException(statusMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+    const isValidPass = await this.userService.checkPassword(password, user.password);
+    if (!isValidPass) {
+      throw new HttpException(statusMessages.INCORRECT_PASSWORD, HttpStatus.BAD_REQUEST);
+    }
+    const payload = {sub: user._id};
+
+    return {
+      access_token: await this.jwtService.signAsync(payload)
+    };
+  }
 }
