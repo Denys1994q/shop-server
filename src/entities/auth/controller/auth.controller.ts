@@ -1,7 +1,7 @@
 import {Body, Controller, Post, HttpCode, HttpStatus, UsePipes} from '@nestjs/common';
 import {AuthService} from '../service/auth.service';
 import {CreateUserDto} from '@app/entities/user/dto/createUserDto';
-import {YupValidationPipe} from '@app/pipes/YupValidationPipe.util';
+import {YupValidationPipe} from '@app/pipes/YupValidationPipe';
 import {createUserSchema} from '@app/entities/user/validation/createUserValidation.schema';
 import {ApiOperation} from '@nestjs/swagger';
 

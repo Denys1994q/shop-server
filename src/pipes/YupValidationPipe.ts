@@ -8,8 +8,8 @@ export class YupValidationPipe<T> implements PipeTransform<T> {
   async transform(value: T) {
     try {
       await this.schema.validate(value, {abortEarly: false});
-    } catch (err) {
-      const errors = err.inner.map((error: {path: string; message: string}) => ({
+    } catch (error) {
+      const errors = error.inner.map((error: {path: string; message: string}) => ({
         field: error.path,
         message: error.message
       }));
