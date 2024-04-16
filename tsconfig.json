@@ -10,6 +10,13 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths": {
+      "@app/*": ["src/*"],
+      "@utils/*": ["src/utils/*"],
+      "@constants/*": ["src/constants/*"],
+      "@entities/*": ["src/entities/*"],
+      "@middlewares/*": ["src/middlewares/*"]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
