@@ -7,6 +7,7 @@ import {ApiOperation} from '@nestjs/swagger';
 import {signInUserSchema} from '@app/entities/user/validation/signInUserValidation.schema';
 import {AuthGuard} from '../guard/auth.guard';
 import {UserWithoutPassword} from '@app/types/user.types';
+import {LoginUserDto} from '@app/entities/user/dto/loginUserDto';
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +25,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('signIn')
   @UsePipes(new YupValidationPipe(signInUserSchema))
-  signIn(@Body() {email, password}: {email: string; password: string}): Promise<{access_token: string}> {
+  signIn(@Body() {email, password}: LoginUserDto): Promise<{access_token: string}> {
     return this.authService.signIn(email, password);
   }
 
