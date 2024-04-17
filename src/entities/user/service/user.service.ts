@@ -22,8 +22,8 @@ export class UserService {
       phoneNumber,
       password
     });
-    const savedUser = await newUser.save();
-    return savedUser;
+
+    return await newUser.save();
   }
 
   async checkPassword(password: string, userPassword: string): Promise<boolean> {
