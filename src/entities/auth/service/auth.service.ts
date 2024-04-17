@@ -15,10 +15,26 @@ export class AuthService {
     const {email} = userData;
     const user = await this.userService.findOne(email);
     if (user) {
-      throw new HttpException(statusMessages.USER_ALREADY_EXISTS, HttpStatus.CONFLICT);
+      throw new HttpException(statusMessages.USER_ALREADY_EXISTS(email), HttpStatus.CONFLICT);
     }
     const savedUser = await this.userService.createUser(userData);
     const payload = {sub: savedUser._id};
+
+    return {
+      access_token: await this.jwtService.signAsync(payload)
+    };
+  }
+
+  async signIn(email: string, password: string): Promise<{access_token: string}> {
+    const user = await this.userService.findOne(email);
+    if (!user) {
+      throw new HttpException(statusMessages.USER_NOT_FOUND(email), HttpStatus.NOT_FOUND);
+    }
+    const isValidPass = await this.userService.checkPassword(password, user.password);
+    if (!isValidPass) {
+      throw new HttpException(statusMessages.INCORRECT_PASSWORD, HttpStatus.BAD_REQUEST);
+    }
+    const payload = {sub: user._id};
 
     return {
       access_token: await this.jwtService.signAsync(payload)

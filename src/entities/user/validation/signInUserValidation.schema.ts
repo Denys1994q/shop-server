@@ -2,11 +2,8 @@ import * as yup from 'yup';
 import {validationErrors} from '@app/constants/validationErrors.constant';
 import {lowercaseRegex, uppercaseRegex, numbersRegex, symbolsRegex} from '@app/constants/validationRegex.constant';
 
-export const createUserSchema = yup.object().shape({
-  firstName: yup.string().required(validationErrors.FIELD_REQUIRED),
-  lastName: yup.string().required(validationErrors.FIELD_REQUIRED),
+export const signInUserSchema = yup.object().shape({
   email: yup.string().email(validationErrors.INVALID_VALUE).required(validationErrors.FIELD_REQUIRED),
-  phoneNumber: yup.string().optional(),
   password: yup
     .string()
     .matches(lowercaseRegex, validationErrors.PASSWORD_INVALID_LOWERCASE_VALUE)

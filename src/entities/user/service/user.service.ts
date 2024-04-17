@@ -3,6 +3,7 @@ import {UserDocument} from '../model/user.schema';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import {CreateUserDto} from '../dto/createUserDto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -21,7 +22,11 @@ export class UserService {
       phoneNumber,
       password
     });
-    const savedUser = await newUser.save();
-    return savedUser;
+
+    return await newUser.save();
+  }
+
+  async checkPassword(password: string, userPassword: string): Promise<boolean> {
+    return await bcrypt.compare(password, userPassword);
   }
 }
