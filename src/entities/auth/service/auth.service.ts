@@ -3,6 +3,8 @@ import {UserService} from '@app/entities/user/service/user.service';
 import {CreateUserDto} from '@app/entities/user/dto/createUserDto';
 import {statusMessages} from '@app/constants/errorMessages.constant';
 import {JwtService} from '@nestjs/jwt';
+import {UserDocument} from '@app/entities/user/model/user.schema';
+import {UserWithoutPassword} from '@app/types/user.types';
 
 @Injectable()
 export class AuthService {
@@ -39,5 +41,14 @@ export class AuthService {
     return {
       access_token: await this.jwtService.signAsync(payload)
     };
+  }
+
+  async getUser(userId: string): Promise<UserWithoutPassword> {
+    const user: UserDocument | null = await this.userService.findById(userId);
+    if (!user) {
+      throw new HttpException(statusMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+    const {password, ...data} = user.toJSON();
+    return data;
   }
 }
