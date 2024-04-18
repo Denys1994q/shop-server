@@ -29,4 +29,8 @@ export class UserService {
   async checkPassword(password: string, userPassword: string): Promise<boolean> {
     return await bcrypt.compare(password, userPassword);
   }
+
+  async findById(userId: string): Promise<UserDocument | null> {
+    return this.userModel.findById(userId);
+  }
 }
