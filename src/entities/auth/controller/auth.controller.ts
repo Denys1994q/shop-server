@@ -6,7 +6,7 @@ import {createUserSchema} from '@app/entities/user/validation/createUserValidati
 import {ApiOperation} from '@nestjs/swagger';
 import {signInUserSchema} from '@app/entities/user/validation/signInUserValidation.schema';
 import {AuthGuard} from '../guard/auth.guard';
-import {UserWithoutPassword} from '@app/types/user.types';
+import {AuthorizedUser} from '@app/types/user.types';
 import {LoginUserDto} from '@app/entities/user/dto/loginUserDto';
 
 @Controller('auth')
@@ -32,7 +32,7 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @ApiOperation({summary: 'Get user', description: 'Get current user'})
   @Get('me')
-  getUser(@Request() {user}): Promise<UserWithoutPassword> {
+  getUser(@Request() {user}): Promise<AuthorizedUser> {
     const userId = user.sub;
     return this.authService.getUser(userId);
   }

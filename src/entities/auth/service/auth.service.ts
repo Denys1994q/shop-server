@@ -4,7 +4,7 @@ import {CreateUserDto} from '@app/entities/user/dto/createUserDto';
 import {statusMessages} from '@app/constants/errorMessages.constant';
 import {JwtService} from '@nestjs/jwt';
 import {UserDocument} from '@app/entities/user/model/user.schema';
-import {UserWithoutPassword} from '@app/types/user.types';
+import {AuthorizedUser} from '@app/types/user.types';
 
 @Injectable()
 export class AuthService {
@@ -43,7 +43,7 @@ export class AuthService {
     };
   }
 
-  async getUser(userId: string): Promise<UserWithoutPassword> {
+  async getUser(userId: string): Promise<AuthorizedUser> {
     const user: UserDocument | null = await this.userService.findById(userId);
     if (!user) {
       throw new HttpException(statusMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
