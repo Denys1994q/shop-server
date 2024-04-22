@@ -1,6 +1,6 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 import {HydratedDocument} from 'mongoose';
-import {setPassword} from './userSchema.setters';
+import {hashField} from './userSchema.setters';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -20,13 +20,19 @@ export class User {
 
   @Prop({required: false})
   phoneNumber?: string;
+
+  @Prop()
+  refreshToken: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
-    this.password = await setPassword(this.password);
+    this.password = await hashField(this.password);
+  }
+  if (this.isModified('refreshToken')) {
+    this.refreshToken = await hashField(this.refreshToken);
   }
   next();
 });

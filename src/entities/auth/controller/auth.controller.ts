@@ -8,16 +8,22 @@ import {signInUserSchema} from '@app/entities/user/validation/signInUserValidati
 import {AuthGuard} from '../guard/auth.guard';
 import {AuthorizedUser} from '@app/types/user.types';
 import {LoginUserDto} from '@app/entities/user/dto/loginUserDto';
+import {RefreshTokenGuard} from '../guard/refreshToken.guard';
+import {Tokens} from '@app/types/tokens.type';
+import {TokensService} from '../service/tokens.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private tokensService: TokensService
+  ) {}
 
   @ApiOperation({summary: 'User sign-up', description: 'Register a new user'})
   @HttpCode(HttpStatus.OK)
   @Post('signUp')
   @UsePipes(new YupValidationPipe(createUserSchema))
-  signUp(@Body() userData: CreateUserDto): Promise<{access_token: string}> {
+  signUp(@Body() userData: CreateUserDto): Promise<Tokens> {
     return this.authService.signUp(userData);
   }
 
@@ -25,7 +31,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('signIn')
   @UsePipes(new YupValidationPipe(signInUserSchema))
-  signIn(@Body() {email, password}: LoginUserDto): Promise<{access_token: string}> {
+  signIn(@Body() {email, password}: LoginUserDto): Promise<Tokens> {
     return this.authService.signIn(email, password);
   }
 
@@ -35,5 +41,15 @@ export class AuthController {
   getUser(@Request() {user}): Promise<AuthorizedUser> {
     const userId = user.sub;
     return this.authService.getUser(userId);
+  }
+
+  @UseGuards(RefreshTokenGuard)
+  @ApiOperation({summary: 'Refresh users token', description: 'Refresh users token'})
+  @Get('refresh')
+  refreshTokens(@Request() request): Promise<Tokens> {
+    const userId = request.user['sub'];
+    const refreshToken = request.refreshToken;
+
+    return this.tokensService.refreshTokens(userId, refreshToken);
   }
 }
