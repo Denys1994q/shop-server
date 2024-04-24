@@ -2,32 +2,32 @@ import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {UserService} from '@app/entities/user/service/user.service';
 import {CreateUserDto} from '@app/entities/user/dto/createUserDto';
 import {statusMessages} from '@app/constants/errorMessages.constant';
-import {JwtService} from '@nestjs/jwt';
 import {UserDocument} from '@app/entities/user/model/user.schema';
 import {AuthorizedUser} from '@app/types/user.types';
+import {Tokens} from '@app/types/tokens.type';
+import {TokensService} from './tokens.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
-    private jwtService: JwtService
+    private tokensService: TokensService
   ) {}
 
-  async signUp(userData: CreateUserDto): Promise<{access_token: string}> {
+  async signUp(userData: CreateUserDto): Promise<Tokens> {
     const {email} = userData;
     const user = await this.userService.findOne(email);
     if (user) {
       throw new HttpException(statusMessages.USER_ALREADY_EXISTS(email), HttpStatus.CONFLICT);
     }
     const savedUser = await this.userService.createUser(userData);
-    const payload = {sub: savedUser._id};
+    const tokens = await this.tokensService.getTokens(savedUser._id.toString());
+    await this.tokensService.updateRefreshToken(savedUser._id.toString(), tokens.refreshToken);
 
-    return {
-      access_token: await this.jwtService.signAsync(payload)
-    };
+    return tokens;
   }
 
-  async signIn(email: string, password: string): Promise<{access_token: string}> {
+  async signIn(email: string, password: string): Promise<Tokens> {
     const user = await this.userService.findOne(email);
     if (!user) {
       throw new HttpException(statusMessages.USER_NOT_FOUND(email), HttpStatus.NOT_FOUND);
@@ -36,11 +36,10 @@ export class AuthService {
     if (!isValidPass) {
       throw new HttpException(statusMessages.INCORRECT_PASSWORD, HttpStatus.BAD_REQUEST);
     }
-    const payload = {sub: user._id};
+    const tokens = await this.tokensService.getTokens(user._id.toString());
+    await this.tokensService.updateRefreshToken(user._id.toString(), tokens.refreshToken);
 
-    return {
-      access_token: await this.jwtService.signAsync(payload)
-    };
+    return tokens;
   }
 
   async getUser(userId: string): Promise<AuthorizedUser> {
@@ -48,7 +47,8 @@ export class AuthService {
     if (!user) {
       throw new HttpException(statusMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
-    const {password, ...data} = user.toJSON();
+    const {password, refreshToken, ...data} = user.toJSON();
+
     return data;
   }
 }

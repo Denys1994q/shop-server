@@ -3,6 +3,7 @@ import {UserDocument} from '../model/user.schema';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import {CreateUserDto} from '../dto/createUserDto';
+import {UpdateUserDto} from '../dto/updateUserDto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -24,6 +25,10 @@ export class UserService {
     });
 
     return await newUser.save();
+  }
+
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<UserDocument> {
+    return this.userModel.findByIdAndUpdate(id, updateUserDto, {new: true}).exec();
   }
 
   async checkPassword(password: string, userPassword: string): Promise<boolean> {
