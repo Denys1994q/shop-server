@@ -52,4 +52,12 @@ export class AuthController {
 
     return this.tokensService.refreshTokens(userId, refreshToken);
   }
+
+  @UseGuards(AuthGuard)
+  @ApiOperation({summary: 'Logout', description: 'Logout current user'})
+  @Get('logout')
+  logout(@Request() {user}): Promise<void> {
+    const userId = user.sub;
+    return this.tokensService.removeRefreshToken(userId);
+  }
 }

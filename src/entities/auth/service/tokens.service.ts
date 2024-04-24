@@ -1,4 +1,4 @@
-import {ForbiddenException, Injectable} from '@nestjs/common';
+import {ForbiddenException, Injectable, UnauthorizedException} from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 import {Request} from 'express';
 import {isVerifiedToken, Tokens} from '@app/types/tokens.type';
@@ -26,7 +26,7 @@ export class TokensService {
     }
   }
 
-  async refreshTokens(userId: string, refreshToken: string) {
+  async refreshTokens(userId: string, refreshToken: string): Promise<Tokens> {
     const user = await this.userService.findById(userId);
     if (!user || !user.refreshToken) throw new ForbiddenException();
     const refreshTokenMatches = await bcrypt.compare(refreshToken, user.refreshToken);
@@ -56,5 +56,12 @@ export class TokensService {
     await this.userService.update(userId, {
       refreshToken: hashedRefreshToken
     });
+  }
+
+  async removeRefreshToken(userId: string): Promise<void> {
+    const user = await this.userService.findById(userId);
+    if (!user) throw new UnauthorizedException();
+    user.refreshToken = null;
+    await user.save();
   }
 }
