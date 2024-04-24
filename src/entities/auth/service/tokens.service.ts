@@ -1,7 +1,7 @@
 import {ForbiddenException, Injectable} from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 import {Request} from 'express';
-import {DecodedToken, Tokens} from '@app/types/tokens.type';
+import {isVerifiedToken, Tokens} from '@app/types/tokens.type';
 import * as bcrypt from 'bcrypt';
 import {UserService} from '@app/entities/user/service/user.service';
 import {accessTokenExpiration, refreshTokenExpiration} from '@app/constants/tokensExpiration.constant';
@@ -17,10 +17,10 @@ export class TokensService {
     return request.headers.authorization?.split(' ')[1];
   }
 
-  async verifyToken(token: string, secretKey: string): Promise<DecodedToken | null> {
+  async verifyToken(token: string, secretKey: string): Promise<isVerifiedToken | null> {
     try {
-      const decoded = await this.jwtService.verifyAsync(token, {secret: secretKey});
-      return decoded;
+      const isVerified = await this.jwtService.verifyAsync(token, {secret: secretKey});
+      return isVerified;
     } catch {
       return null;
     }

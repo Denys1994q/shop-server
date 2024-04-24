@@ -13,11 +13,11 @@ export class RefreshTokenGuard implements CanActivate {
     }
     try {
       const secret = process.env.JWT_REFRESH_TOKEN_SECRET_KEY;
-      const decoded = await this.tokensService.verifyToken(refreshToken, secret);
-      if (!decoded) {
+      const isVerified = await this.tokensService.verifyToken(refreshToken, secret);
+      if (!isVerified) {
         throw new UnauthorizedException();
       }
-      request.user = decoded;
+      request.user = isVerified;
       request.refreshToken = refreshToken;
     } catch {
       throw new UnauthorizedException();

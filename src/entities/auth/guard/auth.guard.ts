@@ -13,11 +13,11 @@ export class AuthGuard implements CanActivate {
     }
     try {
       const secret = process.env.JWT_ACCESS_TOKEN_SECRET_KEY;
-      const decoded = await this.tokensService.verifyToken(accessToken, secret);
-      if (!decoded) {
+      const isVerified = await this.tokensService.verifyToken(accessToken, secret);
+      if (!isVerified) {
         throw new UnauthorizedException();
       }
-      request['user'] = decoded;
+      request['user'] = isVerified;
     } catch {
       throw new UnauthorizedException();
     }

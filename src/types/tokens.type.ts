@@ -3,7 +3,7 @@ export interface Tokens {
   refreshToken: string;
 }
 
-export interface DecodedToken {
+export interface isVerifiedToken {
   sub: string;
   iat: number;
   exp: number;
