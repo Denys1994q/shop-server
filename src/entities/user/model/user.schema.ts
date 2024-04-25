@@ -31,7 +31,7 @@ UserSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     this.password = await hashField(this.password);
   }
-  if (this.isModified('refreshToken')) {
+  if (this.isModified('refreshToken') && this.refreshToken && this.refreshToken.length > 0) {
     this.refreshToken = await hashField(this.refreshToken);
   }
   next();
