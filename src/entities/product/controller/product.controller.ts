@@ -19,7 +19,7 @@ export class ProductController {
   @ApiOperation({summary: 'Add product', description: 'Create a new product'})
   @Post('')
   @UsePipes(new YupValidationPipe(createProductSchema))
-  createProduct(@Body() userData: CreateProductDto): Promise<ProductDocument> {
-    return this.productService.createOne(userData);
+  createProduct(@Body() productData: CreateProductDto): Promise<ProductDocument> {
+    return this.productService.createOne(productData);
   }
 }
