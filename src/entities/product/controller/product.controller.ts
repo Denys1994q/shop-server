@@ -1,7 +1,10 @@
-import {Controller, Get} from '@nestjs/common';
+import {Body, Controller, Get, Post, UsePipes} from '@nestjs/common';
 import {ProductService} from '../service/product.service';
 import {ApiOperation} from '@nestjs/swagger';
 import {ProductDocument} from '../model/product.schema';
+import {CreateProductDto} from '../dto/createProductDto';
+import {YupValidationPipe} from '@app/pipes/YupValidationPipe';
+import {createProductSchema} from '../validation/createProductValidation.schema';
 
 @Controller('product')
 export class ProductController {
@@ -11,5 +14,13 @@ export class ProductController {
   @Get('')
   getUser(): Promise<ProductDocument[]> {
     return this.productService.getAll();
+  }
+
+  @ApiOperation({summary: 'Add product', description: 'Create new product'})
+  // @HttpCode(HttpStatus.OK)
+  @Post('')
+  @UsePipes(new YupValidationPipe(createProductSchema))
+  signUp(@Body() userData: CreateProductDto): Promise<any> {
+    return this.productService.createOne(userData);
   }
 }

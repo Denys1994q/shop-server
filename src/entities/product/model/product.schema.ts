@@ -1,5 +1,5 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import {HydratedDocument, Types} from 'mongoose';
+import {HydratedDocument} from 'mongoose';
 import {RatingEnum, StateEnum, SellerEnum} from '@app/constants/product.enum';
 import {CategoriesEnum} from '@app/constants/categories.enum';
 import {SubcategoriesEnum} from '@app/constants/subcategories.enum';
@@ -13,9 +13,6 @@ interface DescriptionItem {
 
 @Schema()
 export class Product {
-  @Prop({type: Types.ObjectId, required: true})
-  _id: Types.ObjectId;
-
   @Prop({required: true})
   title: string;
 
