@@ -9,7 +9,7 @@ export class ProductController {
 
   @ApiOperation({summary: 'Get products', description: 'Get list of all products'})
   @Get('')
-  getUser(): Promise<ProductDocument[]> {
+  getProducts(): Promise<ProductDocument[]> {
     return this.productService.getAll();
   }
 }
