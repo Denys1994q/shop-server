@@ -16,11 +16,10 @@ export class ProductController {
     return this.productService.getAll();
   }
 
-  @ApiOperation({summary: 'Add product', description: 'Create new product'})
-  // @HttpCode(HttpStatus.OK)
+  @ApiOperation({summary: 'Add product', description: 'Create a new product'})
   @Post('')
   @UsePipes(new YupValidationPipe(createProductSchema))
-  signUp(@Body() userData: CreateProductDto): Promise<any> {
+  signUp(@Body() userData: CreateProductDto): Promise<ProductDocument> {
     return this.productService.createOne(userData);
   }
 }

@@ -4,5 +4,6 @@ export const validationErrors = {
   PASSWORD_INVALID_LOWERCASE_VALUE: 'Password must contain at least 2 lowercase letters',
   PASSWORD_INVALID_UPPERCASE_VALUE: 'Password must contain at least 2 uppercase letters',
   PASSWORD_INVALID_NUMBERS_VALUE: 'Password must contain at least 2 numbers',
-  PASSWORD_INVALID_SYMBOLS_VALUE: 'Password must contain at least 2 symbols'
+  PASSWORD_INVALID_SYMBOLS_VALUE: 'Password must contain at least 2 symbols',
+  INVALID_MIN_LENGTH: (minLength: number) => `Field should be at least ${minLength} characters long`
 };
