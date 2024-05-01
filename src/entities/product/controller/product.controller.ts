@@ -12,7 +12,7 @@ export class ProductController {
 
   @ApiOperation({summary: 'Get products', description: 'Get list of all products'})
   @Get()
-  getProduct(): Promise<ProductDocument[]> {
+  getProducts(): Promise<ProductDocument[]> {
     return this.productService.getAll();
   }
 
