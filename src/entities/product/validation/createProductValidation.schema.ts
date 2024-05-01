@@ -16,12 +16,18 @@ const descriptionItemSchema = yup.object().shape({
 export const createProductSchema = yup.object().shape({
   title: yup.string().min(MIN_LENGTH_TITLE, INVALID_MIN_LENGTH(MIN_LENGTH_TITLE)).required(FIELD_REQUIRED),
   categoryId: yup
-    .mixed<CategoriesEnum>()
-    .oneOf(Object.values(CategoriesEnum) as number[], INVALID_VALUE)
+    .number()
+    .oneOf(
+      Object.values(CategoriesEnum).map((value) => value as number),
+      INVALID_VALUE
+    )
     .required(),
   subcategoryId: yup
-    .mixed<SubcategoriesEnum>()
-    .oneOf(Object.values(SubcategoriesEnum) as number[], INVALID_VALUE)
+    .number()
+    .oneOf(
+      Object.values(SubcategoriesEnum).map((value) => value as number),
+      INVALID_VALUE
+    )
     .required(),
   description: yup
     .string()
@@ -33,12 +39,18 @@ export const createProductSchema = yup.object().shape({
   quantity: yup.number().required(FIELD_REQUIRED),
   discount: yup.number(),
   seller: yup
-    .mixed<SellerEnum>()
-    .oneOf(Object.values(SellerEnum) as number[], INVALID_VALUE)
+    .number()
+    .oneOf(
+      Object.values(SellerEnum).map((value) => value as number),
+      INVALID_VALUE
+    )
     .required(),
   brand: yup.string().required(FIELD_REQUIRED),
   state: yup
-    .mixed<StateEnum>()
-    .oneOf(Object.values(StateEnum) as number[], INVALID_VALUE)
+    .number()
+    .oneOf(
+      Object.values(StateEnum).map((value) => value as number),
+      INVALID_VALUE
+    )
     .required()
 });
