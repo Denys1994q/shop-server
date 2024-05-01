@@ -37,7 +37,7 @@ export class Product {
   @Prop({required: true})
   quantity: number;
 
-  @Prop({required: true, default: 0})
+  @Prop({required: false})
   discount: number;
 
   @Prop({required: true, enum: SellerEnum})
@@ -49,7 +49,7 @@ export class Product {
   @Prop({required: true, enum: StateEnum})
   state: number;
 
-  @Prop({required: true, enum: RatingEnum, default: RatingEnum.NOT_RATED})
+  @Prop({required: false, enum: RatingEnum})
   rating: number;
 }
 

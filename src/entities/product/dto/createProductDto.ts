@@ -25,8 +25,8 @@ export class CreateProductDto {
   @ApiProperty({required: true})
   quantity: number;
 
-  @ApiProperty({required: true, default: 0})
-  discount: number;
+  @ApiProperty({required: false})
+  discount?: number;
 
   @ApiProperty({required: true})
   seller: number;
@@ -36,7 +36,4 @@ export class CreateProductDto {
 
   @ApiProperty({required: true})
   state: number;
-
-  @ApiProperty({required: true, default: 0})
-  rating: number;
 }

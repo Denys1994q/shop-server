@@ -13,10 +13,7 @@ export class ProductService {
   }
 
   async createOne(productData: CreateProductDto): Promise<ProductDocument> {
-    const newProduct = new this.productModel({
-      ...productData,
-      quantity: 1
-    });
+    const newProduct = new this.productModel({...productData});
 
     return await newProduct.save();
   }
