@@ -4,9 +4,10 @@ import {CategoriesEnum} from '@app/constants/categories.enum';
 import {SubcategoriesEnum} from '@app/constants/subcategories.enum';
 import {SellerEnum, StateEnum} from '@app/constants/product.enum';
 import {validationConstants} from '@app/constants/validation.constant';
+import {enumSchema} from '@app/utils/enumSchema';
 
 const {MIN_LENGTH_TITLE, MIN_LENGTH_DESCRIPTION} = validationConstants;
-const {FIELD_REQUIRED, INVALID_VALUE, INVALID_MIN_LENGTH} = validationErrors;
+const {FIELD_REQUIRED, INVALID_MIN_LENGTH} = validationErrors;
 
 const descriptionItemSchema = yup.object().shape({
   label: yup.string().required(FIELD_REQUIRED),
@@ -15,20 +16,8 @@ const descriptionItemSchema = yup.object().shape({
 
 export const createProductSchema = yup.object().shape({
   title: yup.string().min(MIN_LENGTH_TITLE, INVALID_MIN_LENGTH(MIN_LENGTH_TITLE)).required(FIELD_REQUIRED),
-  categoryId: yup
-    .number()
-    .oneOf(
-      Object.values(CategoriesEnum).map((value) => value as number),
-      INVALID_VALUE
-    )
-    .required(),
-  subcategoryId: yup
-    .number()
-    .oneOf(
-      Object.values(SubcategoriesEnum).map((value) => value as number),
-      INVALID_VALUE
-    )
-    .required(),
+  categoryId: enumSchema(CategoriesEnum).required(FIELD_REQUIRED),
+  subcategoryId: enumSchema(SubcategoriesEnum).required(FIELD_REQUIRED),
   description: yup
     .string()
     .min(MIN_LENGTH_DESCRIPTION, INVALID_MIN_LENGTH(MIN_LENGTH_DESCRIPTION))
@@ -37,20 +26,8 @@ export const createProductSchema = yup.object().shape({
   images: yup.array().of(yup.string()).required(FIELD_REQUIRED),
   price: yup.number().positive().required(FIELD_REQUIRED),
   quantity: yup.number().positive().required(FIELD_REQUIRED),
-  discount: yup.number().positive(),
-  seller: yup
-    .number()
-    .oneOf(
-      Object.values(SellerEnum).map((value) => value as number),
-      INVALID_VALUE
-    )
-    .required(),
+  discount: yup.number().positive().max(100),
+  seller: enumSchema(SellerEnum).required(FIELD_REQUIRED),
   brand: yup.string().required(FIELD_REQUIRED),
-  state: yup
-    .number()
-    .oneOf(
-      Object.values(StateEnum).map((value) => value as number),
-      INVALID_VALUE
-    )
-    .required()
+  state: enumSchema(StateEnum).required(FIELD_REQUIRED)
 });

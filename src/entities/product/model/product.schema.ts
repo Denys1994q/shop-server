@@ -37,7 +37,7 @@ export class Product {
   @Prop({required: true, min: 0})
   quantity: number;
 
-  @Prop({required: false, min: 0})
+  @Prop({required: false, min: 0, max: 100})
   discount: number;
 
   @Prop({required: true, enum: SellerEnum})
