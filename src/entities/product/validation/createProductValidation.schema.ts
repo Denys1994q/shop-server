@@ -35,9 +35,9 @@ export const createProductSchema = yup.object().shape({
     .required(FIELD_REQUIRED),
   detailedDescription: yup.array().of(descriptionItemSchema),
   images: yup.array().of(yup.string()).required(FIELD_REQUIRED),
-  price: yup.number().required(FIELD_REQUIRED),
-  quantity: yup.number().required(FIELD_REQUIRED),
-  discount: yup.number(),
+  price: yup.number().positive().required(FIELD_REQUIRED),
+  quantity: yup.number().positive().required(FIELD_REQUIRED),
+  discount: yup.number().positive(),
   seller: yup
     .number()
     .oneOf(

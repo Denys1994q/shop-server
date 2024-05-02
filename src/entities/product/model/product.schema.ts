@@ -31,13 +31,13 @@ export class Product {
   @Prop({required: true})
   images: string[];
 
-  @Prop({required: true})
+  @Prop({required: true, min: 0})
   price: number;
 
-  @Prop({required: true})
+  @Prop({required: true, min: 0})
   quantity: number;
 
-  @Prop({required: false})
+  @Prop({required: false, min: 0})
   discount: number;
 
   @Prop({required: true, enum: SellerEnum})
@@ -49,7 +49,7 @@ export class Product {
   @Prop({required: true, enum: StateEnum})
   state: number;
 
-  @Prop({required: false, enum: RatingEnum})
+  @Prop({required: false, enum: RatingEnum, min: 0})
   rating: number;
 }
 
