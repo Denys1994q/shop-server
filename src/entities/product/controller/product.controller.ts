@@ -11,13 +11,13 @@ export class ProductController {
   constructor(private productService: ProductService) {}
 
   @ApiOperation({summary: 'Get products', description: 'Get list of all products'})
-  @Get('')
+  @Get()
   getProducts(): Promise<ProductDocument[]> {
     return this.productService.getAll();
   }
 
   @ApiOperation({summary: 'Add product', description: 'Create a new product'})
-  @Post('')
+  @Post()
   @UsePipes(new YupValidationPipe(createProductSchema))
   createProduct(@Body() productData: CreateProductDto): Promise<ProductDocument> {
     return this.productService.createOne(productData);
