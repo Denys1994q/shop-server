@@ -1,8 +1,9 @@
-import {Injectable} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {ProductDocument} from '../model/product.schema';
 import {Model} from 'mongoose';
 import {CreateProductDto} from '../dto/createProductDto';
+import {statusMessages} from '@app/constants/errorMessages.constant';
 
 @Injectable()
 export class ProductService {
@@ -16,5 +17,14 @@ export class ProductService {
     const newProduct = new this.productModel({...productData});
 
     return await newProduct.save();
+  }
+
+  async getOne(id: string): Promise<ProductDocument> {
+    const product = await this.productModel.findById(id);
+    if (!product) {
+      throw new HttpException(statusMessages.NOT_FOUND('Product'), HttpStatus.NOT_FOUND);
+    }
+
+    return product;
   }
 }

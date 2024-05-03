@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, UsePipes} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, UsePipes} from '@nestjs/common';
 import {ProductService} from '../service/product.service';
 import {ApiOperation} from '@nestjs/swagger';
 import {ProductDocument} from '../model/product.schema';
@@ -21,5 +21,11 @@ export class ProductController {
   @UsePipes(new YupValidationPipe(createProductSchema))
   createProduct(@Body() productData: CreateProductDto): Promise<ProductDocument> {
     return this.productService.createOne(productData);
+  }
+
+  @ApiOperation({summary: 'Get product', description: 'Get one product by id'})
+  @Get(':id')
+  getOneProduct(@Param('id') id: string): Promise<ProductDocument> {
+    return this.productService.getOne(id);
   }
 }
