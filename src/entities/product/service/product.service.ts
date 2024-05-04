@@ -2,8 +2,9 @@ import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {ProductDocument} from '../model/product.schema';
 import {Model} from 'mongoose';
-import {CreateProductDto} from '../dto/createProductDto';
+import {ProductDto} from '../dto/productDto';
 import {statusMessages} from '@app/constants/errorMessages.constant';
+import {successMessages} from '@app/constants/successMessages.constant';
 
 @Injectable()
 export class ProductService {
@@ -13,7 +14,7 @@ export class ProductService {
     return await this.productModel.find();
   }
 
-  async createOne(productData: CreateProductDto): Promise<ProductDocument> {
+  async createOne(productData: ProductDto): Promise<ProductDocument> {
     const newProduct = new this.productModel({...productData});
 
     return await newProduct.save();
@@ -26,5 +27,12 @@ export class ProductService {
     }
 
     return product;
+  }
+
+  async updateOne(id: string, productData: ProductDto): Promise<string> {
+    await this.getOne(id);
+    await this.productModel.updateOne({_id: id}, {...productData});
+
+    return successMessages.SUCCESS;
   }
 }
