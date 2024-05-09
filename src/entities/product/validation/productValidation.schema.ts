@@ -4,7 +4,7 @@ import {CategoriesEnum} from '@app/constants/categories.enum';
 import {SubcategoriesEnum} from '@app/constants/subcategories.enum';
 import {SellerEnum, StateEnum} from '@app/constants/product.enum';
 import {validationConstants} from '@app/constants/validation.constant';
-import {enumSchema} from '@app/utils/enumSchema';
+import {enumSchema} from '@app/validation/enumSchema';
 
 const {MIN_LENGTH_TITLE, MIN_LENGTH_DESCRIPTION} = validationConstants;
 const {FIELD_REQUIRED, INVALID_MIN_LENGTH} = validationErrors;
@@ -14,7 +14,7 @@ const descriptionItemSchema = yup.object().shape({
   value: yup.string().required(FIELD_REQUIRED)
 });
 
-export const createProductSchema = yup.object().shape({
+export const productSchema = yup.object().shape({
   title: yup.string().min(MIN_LENGTH_TITLE, INVALID_MIN_LENGTH(MIN_LENGTH_TITLE)).required(FIELD_REQUIRED),
   categoryId: enumSchema(CategoriesEnum).required(FIELD_REQUIRED),
   subcategoryId: enumSchema(SubcategoriesEnum).required(FIELD_REQUIRED),
