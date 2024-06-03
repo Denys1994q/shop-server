@@ -1,6 +1,7 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 import {HydratedDocument} from 'mongoose';
 import {hashField} from './userSchema.setters';
+import {ProductDocument} from '@app/entities/product/model/product.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -23,6 +24,9 @@ export class User {
 
   @Prop()
   refreshToken: string;
+
+  @Prop({type: [{product: {type: 'ObjectId', ref: 'Product'}, addedDate: {type: Date}}], default: []})
+  wishlist: {product: ProductDocument['_id']; addedDate: Date}[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

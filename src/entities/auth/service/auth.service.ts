@@ -43,12 +43,52 @@ export class AuthService {
   }
 
   async getUser(userId: string): Promise<AuthorizedUser> {
-    const user: UserDocument | null = await this.userService.findById(userId);
+    const user: UserDocument | null = await (
+      await this.userService.findById(userId)
+    ).populate([
+      {
+        path: 'wishlist.product',
+        model: 'Product'
+      }
+    ]);
     if (!user) {
       throw new HttpException(statusMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     const {password, refreshToken, ...data} = user.toJSON();
 
     return data;
+  }
+
+  async addToWishlist(userId: string, productId: any): Promise<any> {
+    const user: UserDocument | null = await (
+      await this.userService.findById(userId)
+    ).populate({
+      path: 'wishlist.product',
+      model: 'Product'
+    });
+
+    if (!user) {
+      throw new HttpException(statusMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+    const isProductInWishlist = user.wishlist.some((item) => item.product._id.equals(productId));
+    if (isProductInWishlist) {
+      throw new HttpException('already in list', HttpStatus.BAD_REQUEST);
+    }
+    user.wishlist.push({product: productId, addedDate: Date.now() as any});
+    await user.save();
+
+    return user;
+  }
+
+  async removeFromWishlist(userId: string, productId: any): Promise<any> {
+    const user: UserDocument | null = await await this.userService.findById(userId);
+
+    if (!user) {
+      throw new HttpException(statusMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+    user.wishlist = user.wishlist.filter((item) => item.product.toString() !== productId);
+    await user.save();
+
+    return user;
   }
 }

@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Put} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Put, Query} from '@nestjs/common';
 import {ProductService} from '../service/product.service';
 import {ApiOperation} from '@nestjs/swagger';
 import {ProductDocument} from '../model/product.schema';
@@ -13,8 +13,28 @@ export class ProductController {
 
   @Get()
   @ApiOperation({summary: 'Get products', description: 'Get list of all products'})
-  getProducts(): Promise<ProductDocument[]> {
-    return this.productService.getAll();
+  getProducts(
+    @Query('minPrice') minPrice: number,
+    @Query('maxPrice') maxPrice: number,
+    @Query('minRating') minRating: number,
+    @Query('maxRating') maxRating: number,
+    @Query('categories') categories: string,
+    @Query('brands') brands: string,
+    @Query('sort') sort: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number
+  ): Promise<{products: ProductDocument[]; total: number; pages: number}> {
+    return this.productService.getAll(
+      minPrice,
+      maxPrice,
+      minRating,
+      maxRating,
+      categories,
+      brands,
+      sort,
+      pageSize,
+      page
+    );
   }
 
   @Post()

@@ -1,4 +1,17 @@
-import {Body, Controller, Post, Get, Request, UseGuards, HttpCode, HttpStatus, UsePipes} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Request,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+  UsePipes,
+  Patch,
+  Param,
+  Delete
+} from '@nestjs/common';
 import {AuthService} from '../service/auth.service';
 import {CreateUserDto} from '@app/entities/user/dto/createUserDto';
 import {YupValidationPipe} from '@app/pipes/YupValidationPipe';
@@ -11,6 +24,7 @@ import {LoginUserDto} from '@app/entities/user/dto/loginUserDto';
 import {RefreshTokenGuard} from '../guard/refreshToken.guard';
 import {Tokens} from '@app/types/tokens.type';
 import {TokensService} from '../service/tokens.service';
+import {idSchema} from '@app/validation/validateIdSchema';
 
 @Controller('auth')
 export class AuthController {
@@ -59,5 +73,27 @@ export class AuthController {
   logout(@Request() {user}): Promise<void> {
     const userId = user.sub;
     return this.tokensService.removeRefreshToken(userId);
+  }
+
+  @UseGuards(AuthGuard)
+  @ApiOperation({summary: 'Add to user`s wishlist', description: 'Add product to user`s wishlist'})
+  @Patch('wishlist/:id')
+  addToWishlist(
+    @Param('id', new YupValidationPipe(idSchema)) productId: string,
+    @Request() {user}
+  ): Promise<AuthorizedUser> {
+    const userId = user.sub;
+    return this.authService.addToWishlist(userId, productId);
+  }
+
+  @UseGuards(AuthGuard)
+  @ApiOperation({summary: 'Add to user`s wishlist', description: 'Add product to user`s wishlist'})
+  @Delete('wishlist/:id')
+  removeFromWishlist(
+    @Param('id', new YupValidationPipe(idSchema)) productId: string,
+    @Request() {user}
+  ): Promise<AuthorizedUser> {
+    const userId = user.sub;
+    return this.authService.removeFromWishlist(userId, productId);
   }
 }

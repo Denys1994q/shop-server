@@ -3,6 +3,7 @@ import {HydratedDocument} from 'mongoose';
 import {RatingEnum, StateEnum, SellerEnum} from '@app/constants/product.enum';
 import {CategoriesEnum} from '@app/constants/categories.enum';
 import {SubcategoriesEnum} from '@app/constants/subcategories.enum';
+import {BrandsEnum} from '@app/constants/brands.enum';
 
 export type ProductDocument = HydratedDocument<Product>;
 
@@ -43,8 +44,8 @@ export class Product {
   @Prop({required: true, enum: SellerEnum})
   seller: number;
 
-  @Prop({required: true})
-  brand: string;
+  @Prop({required: true, enum: BrandsEnum})
+  brand: number;
 
   @Prop({required: true, enum: StateEnum})
   state: number;
